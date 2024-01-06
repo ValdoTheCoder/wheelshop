@@ -21,7 +21,6 @@ import {
 import express from "express";
 import sqlite3 from "sqlite3";
 import cors from "cors";
-import { initialize } from "./initializeDatabase.js";
 
 const PORT = 3001;
 const db = new sqlite3.Database("data/wheels.db");

@@ -15,6 +15,10 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y tzdata
+ENV TZ=Europe/Vilnius
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 COPY . .
 
 EXPOSE 3001

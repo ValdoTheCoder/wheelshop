@@ -6,6 +6,8 @@ import {
   scrapeWeb,
   TIME_CONFIG,
   insertWheelsIntoDatabase,
+  insertStockIntoDatabase,
+  createTables,
 } from "./utils.js";
 import {
   ACTIVATE_QUERY,
@@ -22,7 +24,7 @@ import cors from "cors";
 import { initialize } from "./initializeDatabase.js";
 
 const PORT = 3001;
-const db = new sqlite3.Database("./data/wheels.db");
+const db = new sqlite3.Database("data/wheels.db");
 
 const app = express();
 
@@ -280,7 +282,15 @@ app.delete("/", async (req, res) => {
 
 app.get("/init", async (_req, res) => {
   try {
-    await initialize(db);
+    console.log("creating tables");
+    await createTables(db);
+
+    console.log("scraping");
+    const { wheelBase, stock } = await scrapeWeb("all");
+
+    console.log("inserting");
+    await insertWheelsIntoDatabase(db, wheelBase);
+    await insertStockIntoDatabase(db, stock);
     res.status(200).json({});
   } catch (err) {
     console.error(err);

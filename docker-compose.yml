@@ -1,0 +1,14 @@
+version: "3"
+services:
+  back-end:
+    build:
+      context: ./back-end
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./data:/app/data
+  front-end:
+    build:
+      context: ./front-end
+    ports:
+      - "3000:80"

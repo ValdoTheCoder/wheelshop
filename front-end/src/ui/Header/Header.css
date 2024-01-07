@@ -7,6 +7,13 @@
   align-items: center;
 }
 
+.header-inner {
+  display: flex;
+  flex: 0 1 1700px;
+  justify-content: space-between;
+  margin: auto
+}
+
 .divider {
   margin: 5px 0;
 }

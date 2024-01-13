@@ -28,27 +28,25 @@ Welcome to the WheelShop Wheel Manager web app! This application is designed to 
 To get started with WheelShop Wheel Manager, follow these steps:
 
 1. **Clone the Repository:**
-   ``
-   git clone https://github.com/ValdoTheCoder/wheelshop-wm.git
-``
+```
+git clone https://github.com/ValdoTheCoder/wheelshop-wm.git
+```
 2. **Install Dependencies**
-``
+```
 cd wheelshop-wm
 npm install
-``
+```
 3. **Run Application**
-``
+```
 npm start
-``
+```
 4. **Start Back-End**
-``
+```
 cd back-end
-``
-``
 node app.js
-``
+```
 5. **Configure Database**
-Go to `http://localhost:3001/init` to initialise database
+- Go to `http://localhost:3001/init` to initialise database
 
 6. **Access the App**
-Access app by visiting `http://localhost:3000`
+- Access app by visiting `http://localhost:3000`

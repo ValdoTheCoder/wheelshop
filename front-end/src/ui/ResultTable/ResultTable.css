@@ -30,35 +30,35 @@
 }
 
 .row-warning {
-  background-color: #442a11;
+  background-color: #7c4a15;
 }
 
 .row-warning:hover td {
-  background-color: #593815 !important;
+  background-color: #aa6215 !important;
 }
 
 .row-danger {
-  background-color: #431418;
+  background-color: #791a1f;
 }
 
 .row-danger:hover td {
-  background-color: #58181c !important;
+  background-color: #a61d24 !important;
 }
 
 .row-ok {
-  background-color: #1d3712 !important;
+  background-color: #306317 !important;
 }
 
 .row-ok:hover td {
-  background-color: #274916 !important;
+  background-color: #3c8618 !important;
 }
 
 .row-custom {
-  background-color: #112545;
+  background-color: #15417e;
 }
 
 .row-custom:hover td {
-  background-color: #15325b !important;
+  background-color: #1554ad !important;
 }
 
 .result-actions {

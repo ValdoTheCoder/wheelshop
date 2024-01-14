@@ -15,5 +15,3 @@ docker-compose up -d
 
 # Optional: Display a message indicating the script has completed
 Write-Host "Updates pulled, Docker containers stopped and removed, images removed, and new containers started successfully."
-
-# testing

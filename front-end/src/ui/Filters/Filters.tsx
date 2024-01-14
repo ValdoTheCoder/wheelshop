@@ -105,6 +105,22 @@ export const Filters: React.FC<FiltersProps> = ({
             allowClear
           />
         </Space>
+        <Select
+          value={size.value}
+          onChange={size.onChange}
+          options={sizeOptions()}
+          placeholder="Size"
+          className="filters-size"
+          allowClear
+        />
+        <Select
+          options={holesOptions}
+          value={holes.value}
+          onChange={holes.onChange}
+          placeholder="Holes"
+          className="filters-holes"
+          allowClear
+        />
         <Space>
           <Text>PCD</Text>
           <Input
@@ -124,22 +140,6 @@ export const Filters: React.FC<FiltersProps> = ({
             allowClear
           />
         </Space>
-        <Select
-          value={size.value}
-          onChange={size.onChange}
-          options={sizeOptions()}
-          placeholder="Size"
-          className="filters-size"
-          allowClear
-        />
-        <Select
-          options={holesOptions}
-          value={holes.value}
-          onChange={holes.onChange}
-          placeholder="Holes"
-          className="filters-holes"
-          allowClear
-        />
         <Button
           icon={<ReloadOutlined />}
           onClick={onFilterClear}

@@ -12,6 +12,7 @@ import {
 import {
   ACTIVATE_QUERY,
   CREATE_WHEEL_QUERY,
+  DELETE_INACTIVE_WHEELS,
   GET_JOINED_ENTRY_BY_CODE,
   JOINED_TABLES_COUNT_QUERY,
   JOINED_TABLES_QUERY,
@@ -154,7 +155,7 @@ app.get("/load_wheels", async (_req, res) => {
   try {
     const { wheelBase } = await scrapeWeb("wheels");
 
-    db.run("DELETE FROM wheels WHERE modifier IS NULL", async (err) => {
+    db.run(DELETE_INACTIVE_WHEELS, async (err) => {
       if (err) {
         console.error("Error:", err);
         res.status(500).json({ error: err.message });

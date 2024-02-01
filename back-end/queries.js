@@ -24,6 +24,16 @@ FROM active;`;
 
 export const GET_JOINED_ENTRY_BY_CODE = `${JOINED_TABLES_QUERY} WHERE w.code = ?`;
 
+export const DELETE_INACTIVE_WHEELS = `
+DELETE FROM wheels WHERE modifier IS NULL 
+AND
+NOT EXISTS (
+  SELECT 1
+  FROM active
+  WHERE wheels.code = active.code
+);
+`;
+
 export const UPDATE_QUERY = `
 UPDATE wheels SET 
 designCode = ?,

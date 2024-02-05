@@ -24,7 +24,7 @@ import sqlite3 from "sqlite3";
 import cors from "cors";
 
 const PORT = 3001;
-const db = new sqlite3.Database("data/wheels.db");
+const db = new sqlite3.Database("../data/wheels.db");
 
 const app = express();
 
@@ -164,6 +164,41 @@ app.get("/load_wheels", async (_req, res) => {
         res.status(200).json({});
       }
     });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/update_database", async (_req, res) => {
+  try {
+    const { wheelBase, stock } = await scrapeWeb("all");
+
+    db.run(DELETE_INACTIVE_WHEELS, async (err) => {
+      if (err) {
+        console.error("Error:", err);
+        res.status(500).json({ error: err.message });
+      } else {
+        await insertWheelsIntoDatabase(db, wheelBase);
+        res.status(200).json({});
+      }
+    });
+
+    const time = new Date().toLocaleString("default", TIME_CONFIG);
+
+    db.run("DELETE FROM stock", async (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json(err);
+      } else
+        db.serialize(async () => {
+          for (const entry of stock) {
+            await updateStock(db, entry.code, entry.amount, time);
+          }
+        });
+    });
+
+    res.json(time);
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ error: err.message });

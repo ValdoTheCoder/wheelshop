@@ -77,6 +77,11 @@ export interface DeleteResponse {
   suspendedTotal: number;
 }
 
+export interface UpdateDatabaseResponse {
+  time: string;
+  total: number;
+}
+
 export const activateEntry = async (
   code: string,
   isActive: string
@@ -113,14 +118,6 @@ export const find = async (
   const data = await fetch(url).then((data) => data.json());
 
   return data;
-};
-
-export const loadStock = async (): Promise<string> => {
-  const url = `${baseUrl}/load_stock`;
-
-  const response = await fetch(url).then((data) => data.json());
-
-  return response;
 };
 
 export const update = async (req: UpdateRequest): Promise<Wheel> => {
@@ -177,9 +174,10 @@ export const removeActivated = async (
   return data;
 };
 
-export const loadWheels = async (): Promise<void> => {
-  const url = `${baseUrl}/load_wheels`;
-  await fetch(url).then((response) => {
-    if (!response.ok) throw new Error("Wheels not loaded");
-  });
+export const updateDatabase = async (): Promise<UpdateDatabaseResponse> => {
+  const url = `${baseUrl}/update_database`;
+
+  const response = await fetch(url).then((data) => data.json());
+
+  return response;
 };

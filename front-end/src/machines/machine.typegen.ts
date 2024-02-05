@@ -28,16 +28,6 @@ export interface Typegen0 {
       data: unknown;
       __tip: "See the XState TS docs to learn how to strongly type this.";
     };
-    "done.invoke.machine.loadingStock:invocation[0]": {
-      type: "done.invoke.machine.loadingStock:invocation[0]";
-      data: unknown;
-      __tip: "See the XState TS docs to learn how to strongly type this.";
-    };
-    "done.invoke.machine.loadingWheels:invocation[0]": {
-      type: "done.invoke.machine.loadingWheels:invocation[0]";
-      data: unknown;
-      __tip: "See the XState TS docs to learn how to strongly type this.";
-    };
     "done.invoke.machine.noteModal.persisting:invocation[0]": {
       type: "done.invoke.machine.noteModal.persisting:invocation[0]";
       data: unknown;
@@ -53,6 +43,11 @@ export interface Typegen0 {
       data: unknown;
       __tip: "See the XState TS docs to learn how to strongly type this.";
     };
+    "done.invoke.machine.updatingDatabase:invocation[0]": {
+      type: "done.invoke.machine.updatingDatabase:invocation[0]";
+      data: unknown;
+      __tip: "See the XState TS docs to learn how to strongly type this.";
+    };
     "error.platform.machine.activating:invocation[0]": {
       type: "error.platform.machine.activating:invocation[0]";
       data: unknown;
@@ -63,10 +58,6 @@ export interface Typegen0 {
     };
     "error.platform.machine.deleting:invocation[0]": {
       type: "error.platform.machine.deleting:invocation[0]";
-      data: unknown;
-    };
-    "error.platform.machine.loadingWheels:invocation[0]": {
-      type: "error.platform.machine.loadingWheels:invocation[0]";
       data: unknown;
     };
     "error.platform.machine.noteModal.persisting:invocation[0]": {
@@ -81,6 +72,10 @@ export interface Typegen0 {
       type: "error.platform.machine.updateMode.updating:invocation[0]";
       data: unknown;
     };
+    "error.platform.machine.updatingDatabase:invocation[0]": {
+      type: "error.platform.machine.updatingDatabase:invocation[0]";
+      data: unknown;
+    };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
@@ -89,10 +84,9 @@ export interface Typegen0 {
     deleteEntryService: "done.invoke.machine.deleting:invocation[0]";
     getEntriesService: "done.invoke.machine.loading:invocation[0]";
     getMetadataService: "done.invoke.machine.loadingMetadata:invocation[0]";
-    loadStockService: "done.invoke.machine.loadingStock:invocation[0]";
-    loadWheelsService: "done.invoke.machine.loadingWheels:invocation[0]";
     notePersistService: "done.invoke.machine.noteModal.persisting:invocation[0]";
     removeActivatedService: "done.invoke.machine.removingActivated:invocation[0]";
+    updateDatabaseService: "done.invoke.machine.updatingDatabase:invocation[0]";
     updateEntryService: "done.invoke.machine.updateMode.updating:invocation[0]";
   };
   missingImplementations: {
@@ -111,10 +105,10 @@ export interface Typegen0 {
     assignEntryUpdate: "change.update.entry";
     assignFindParams: "merge.find.params" | "search";
     assignInitialNotes: "open.note.modal";
-    assignInventoryLoadTime: "done.invoke.machine.loadingStock:invocation[0]";
     assignMetadata: "done.invoke.machine.loadingMetadata:invocation[0]";
     assignNote: "change.note";
     assignPage: "change.page";
+    assignUpdatedDatabaseMetadata: "done.invoke.machine.updatingDatabase:invocation[0]";
     assignUpdatedEntry:
       | "done.invoke.machine.noteModal.persisting:invocation[0]"
       | "done.invoke.machine.updateMode.updating:invocation[0]";
@@ -139,15 +133,14 @@ export interface Typegen0 {
       | "error.platform.machine.activating:invocation[0]"
       | "error.platform.machine.createMode.persisting:invocation[0]"
       | "error.platform.machine.deleting:invocation[0]"
-      | "error.platform.machine.loadingWheels:invocation[0]"
       | "error.platform.machine.noteModal.persisting:invocation[0]"
       | "error.platform.machine.removingActivated:invocation[0]"
-      | "error.platform.machine.updateMode.updating:invocation[0]";
+      | "error.platform.machine.updateMode.updating:invocation[0]"
+      | "error.platform.machine.updatingDatabase:invocation[0]";
     notifySuccess:
       | "done.invoke.machine.activating:invocation[0]"
       | "done.invoke.machine.createMode.persisting:invocation[0]"
       | "done.invoke.machine.deleting:invocation[0]"
-      | "done.invoke.machine.loadingWheels:invocation[0]"
       | "done.invoke.machine.noteModal.persisting:invocation[0]"
       | "done.invoke.machine.removingActivated:invocation[0]"
       | "done.invoke.machine.updateMode.updating:invocation[0]";
@@ -166,14 +159,11 @@ export interface Typegen0 {
       | "change.page"
       | "clear.filters"
       | "done.invoke.machine.loadingMetadata:invocation[0]"
-      | "done.invoke.machine.loadingStock:invocation[0]"
-      | "done.invoke.machine.loadingWheels:invocation[0]"
       | "search";
     getMetadataService: "xstate.init";
-    loadStockService: "load.stock";
-    loadWheelsService: "load.wheels";
     notePersistService: "confirm" | "remove.note";
     removeActivatedService: "remove.activated";
+    updateDatabaseService: "update.database";
     updateEntryService: "confirm";
   };
   matchesStates:
@@ -185,8 +175,6 @@ export interface Typegen0 {
     | "idle"
     | "loading"
     | "loadingMetadata"
-    | "loadingStock"
-    | "loadingWheels"
     | "noteModal"
     | "noteModal.entry"
     | "noteModal.persisting"
@@ -194,6 +182,7 @@ export interface Typegen0 {
     | "updateMode"
     | "updateMode.entry"
     | "updateMode.updating"
+    | "updatingDatabase"
     | {
         createMode?: "entry" | "persisting";
         noteModal?: "entry" | "persisting";

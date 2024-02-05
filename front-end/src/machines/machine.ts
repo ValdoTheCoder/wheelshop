@@ -5,16 +5,16 @@ import {
   DeleteResponse,
   FindRequest,
   FindResponse,
+  UpdateDatabaseResponse,
   UpdateRequest,
   Wheel,
   activateEntry,
   createEntry,
   deleteEntry,
   find,
-  loadStock,
-  loadWheels,
   removeActivated,
   update,
+  updateDatabase,
 } from "../data-access/wheels";
 import { updateNotes } from "../data-access/notes";
 import { notification } from "antd";
@@ -51,8 +51,7 @@ export type MachineEvents =
   | { type: "close" }
   | { type: "confirm" }
   | { type: "load.metadata" }
-  | { type: "load.stock" }
-  | { type: "load.wheels" }
+  | { type: "update.database" }
   | { type: "open.create" }
   | { type: "change.create"; payload: Partial<CreateRequest> }
   | { type: "open.update"; code: string }
@@ -72,14 +71,13 @@ export type MachineEvents =
 export type MachinesServices = {
   getEntriesService: { data: FindResponse };
   activateService: { data: ActivateResponse };
-  loadStockService: { data: string };
   updateEntryService: { data: Wheel };
   getMetadataService: { data: Metadata };
   notePersistService: { data: Wheel };
   createService: { data: void };
   deleteEntryService: { data: DeleteResponse };
   removeActivatedService: { data: DeleteResponse };
-  loadWheelsService: { data: void };
+  updateDatabaseService: { data: UpdateDatabaseResponse };
 };
 
 export type MachineRef = ActorRefFrom<typeof machine>;
@@ -129,7 +127,7 @@ export const machine = createMachine(
             target: "activating",
             actions: "assignEntryToActivate",
           },
-          "load.stock": "loadingStock",
+          "update.database": "updatingDatabase",
           "toggle.overlay": {
             actions: "toggleOverlay",
           },
@@ -152,7 +150,6 @@ export const machine = createMachine(
             actions: "assignPage",
           },
           "remove.activated": "removingActivated",
-          "load.wheels": "loadingWheels",
           search: {
             actions: ["assignFindParams", "resetPageCounter"],
             target: "loading",
@@ -163,6 +160,19 @@ export const machine = createMachine(
           "clear.filters": {
             target: "loading",
             actions: "assignClearedFilters",
+          },
+        },
+      },
+      updatingDatabase: {
+        invoke: {
+          src: "updateDatabaseService",
+          onDone: {
+            target: "idle",
+            actions: "assignUpdatedDatabaseMetadata",
+          },
+          onError: {
+            target: "idle",
+            actions: "notifyError",
           },
         },
       },
@@ -281,28 +291,6 @@ export const machine = createMachine(
           },
         },
       },
-      loadingStock: {
-        invoke: {
-          src: "loadStockService",
-          onDone: {
-            target: "loading",
-            actions: "assignInventoryLoadTime",
-          },
-        },
-      },
-      loadingWheels: {
-        invoke: {
-          src: "loadWheelsService",
-          onDone: {
-            target: "loading",
-            actions: "notifySuccess",
-          },
-          onError: {
-            target: "idle",
-            actions: "notifyError",
-          },
-        },
-      },
       activating: {
         invoke: {
           src: "activateService",
@@ -405,8 +393,9 @@ export const machine = createMachine(
         activeTotal: evt.data.activeTotal,
         suspendedTotal: evt.data.suspendedTotal,
       })),
-      assignInventoryLoadTime: assign((_ctx, evt) => ({
-        inventoryLoadTime: evt.data,
+      assignUpdatedDatabaseMetadata: assign((_ctx, evt) => ({
+        inventoryLoadTime: evt.data.time,
+        totalEntries: evt.data.total,
       })),
       assignNote: assign((_ctx, evt) => ({
         noteDraft: evt.note,
@@ -524,7 +513,6 @@ export const machine = createMachine(
           ctx.entryToActivate.isActive
         );
       },
-      loadStockService: () => loadStock(),
       updateEntryService: (ctx) => {
         if (!ctx.entryToUpdateDraft)
           throw new Error(
@@ -545,7 +533,7 @@ export const machine = createMachine(
       },
       deleteEntryService: (_ctx, evt) => deleteEntry(evt.code),
       removeActivatedService: (_ctx, evt) => removeActivated(evt.code),
-      loadWheelsService: () => loadWheels(),
+      updateDatabaseService: () => updateDatabase(),
     },
     guards: {
       isAllMode: (ctx) => !ctx.findParams?.isActive,

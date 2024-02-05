@@ -129,50 +129,6 @@ app.get("/search", (req, res) => {
   });
 });
 
-app.get("/load_stock", async (_req, res) => {
-  try {
-    const { stock } = await scrapeWeb("stock");
-
-    const time = new Date().toLocaleString("default", TIME_CONFIG);
-
-    db.run("DELETE FROM stock", async (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json(err);
-      } else
-        db.serialize(async () => {
-          for (const entry of stock) {
-            await updateStock(db, entry.code, entry.amount, time);
-          }
-        });
-    });
-
-    res.json(time);
-  } catch (err) {
-    console.error("Error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/load_wheels", async (_req, res) => {
-  try {
-    const { wheelBase } = await scrapeWeb("wheels");
-
-    db.run(DELETE_INACTIVE_WHEELS, async (err) => {
-      if (err) {
-        console.error("Error:", err);
-        res.status(500).json({ error: err.message });
-      } else {
-        await insertWheelsIntoDatabase(db, wheelBase);
-        res.status(200).json({});
-      }
-    });
-  } catch (err) {
-    console.error("Error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.get("/update_database", async (_req, res) => {
   try {
     console.log("Scraping");

@@ -37,8 +37,7 @@ const AppContainer: React.FC = () => {
     currentPage,
   } = machineState.context;
 
-  const isStockLoading = machineState.matches("loadingStock");
-  const isWheelsLoading = machineState.matches("loadingWheels");
+  const isUpdatingDatabase = machineState.matches("updatingDatabase");
 
   const onToggleActivate = useCallback(
     (code: string, status: ActiveType) => {
@@ -121,14 +120,12 @@ const AppContainer: React.FC = () => {
     >
       <Page
         headerProps={{
-          isStockLoading,
-          isWheelsLoading,
+          isUpdatingDatabase,
           inventoryLoadTime,
           totalEntries,
           activeTotal,
           suspendedTotal,
-          onLoadWheels: () => sendMachine({ type: "load.wheels" }),
-          onLoad: () => sendMachine({ type: "load.stock" }),
+          onUpdateDatabase: () => sendMachine({ type: "update.database" }),
           onCreateOpen: () => sendMachine({ type: "open.create" }),
         }}
         resultTableProps={{
@@ -198,7 +195,7 @@ const AppContainer: React.FC = () => {
               }),
           },
         }}
-        isFullLoading={isWheelsLoading || isStockLoading}
+        isFullLoading={isUpdatingDatabase}
       />
       <ModalsContainer machineRef={machineInstance} />
     </ConfigProvider>

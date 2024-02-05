@@ -5,6 +5,7 @@ import {
   CREATE_NOTES_TABLE,
   CREATE_STOCK_TABLE,
   CREATE_WHEELS_TABLE,
+  INSERT_OR_IGNORE_WHEELS,
 } from "./queries.js";
 
 const URL =
@@ -64,11 +65,7 @@ export const getActiveCount = (db) => {
 
 export async function insertWheelsIntoDatabase(db, data) {
   return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      `INSERT INTO wheels
-      (fullString, code, designCode, colorCode, size, width, holes, pcd, et, cb)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    );
+    const stmt = db.prepare(INSERT_OR_IGNORE_WHEELS);
 
     db.serialize(() => {
       data.forEach((entry) => {

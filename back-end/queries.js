@@ -34,6 +34,10 @@ NOT EXISTS (
 );
 `;
 
+export const INSERT_OR_IGNORE_WHEELS = `INSERT OR IGNORE INTO wheels
+(fullString, code, designCode, colorCode, size, width, holes, pcd, et, cb)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+
 export const UPDATE_QUERY = `
 UPDATE wheels SET 
 designCode = ?,

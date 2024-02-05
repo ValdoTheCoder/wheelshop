@@ -24,7 +24,10 @@ import sqlite3 from "sqlite3";
 import cors from "cors";
 
 const PORT = 3001;
-const db = new sqlite3.Database("../data/wheels.db");
+
+// When developing locally this has to be changed to ../data...
+// Due to current config in docker-compose
+const db = new sqlite3.Database("data/wheels.db");
 
 const app = express();
 
@@ -172,33 +175,46 @@ app.get("/load_wheels", async (_req, res) => {
 
 app.get("/update_database", async (_req, res) => {
   try {
+    console.log("Scraping");
     const { wheelBase, stock } = await scrapeWeb("all");
 
-    db.run(DELETE_INACTIVE_WHEELS, async (err) => {
-      if (err) {
-        console.error("Error:", err);
-        res.status(500).json({ error: err.message });
-      } else {
-        await insertWheelsIntoDatabase(db, wheelBase);
-        res.status(200).json({});
-      }
+    console.log("Updating Wheels");
+    await new Promise((resolve, reject) => {
+      db.run(DELETE_INACTIVE_WHEELS, async (err) => {
+        if (err) {
+          console.error("Error:", err);
+          reject(err);
+        } else {
+          await insertWheelsIntoDatabase(db, wheelBase);
+          resolve();
+        }
+      });
     });
 
     const time = new Date().toLocaleString("default", TIME_CONFIG);
 
-    db.run("DELETE FROM stock", async (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json(err);
-      } else
-        db.serialize(async () => {
-          for (const entry of stock) {
-            await updateStock(db, entry.code, entry.amount, time);
-          }
-        });
+    console.log("Updating Inventory");
+    await new Promise((resolve, reject) => {
+      db.run("DELETE FROM stock", async (err) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          await new Promise((resolveSerialize) => {
+            db.serialize(async () => {
+              for (const entry of stock) {
+                await updateStock(db, entry.code, entry.amount, time);
+              }
+              resolveSerialize();
+            });
+          });
+          resolve();
+        }
+      });
     });
 
-    res.json(time);
+    const { total } = await getTotalCount(db);
+    res.json({ time, total });
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ error: err.message });

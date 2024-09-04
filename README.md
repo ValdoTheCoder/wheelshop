@@ -2,6 +2,9 @@
 
 Welcome to the WheelShop Wheel Manager web app! This application is designed to manage the stock information for a variety of wheels. With a comprehensive database, versatile filtering options, and features to activate/suspend wheels, add custom entries, and leave notes, you have full control over your wheel inventory.
 
+> [!WARNING]
+> Web Scraping page used to for wheel loading has been closed.
+
 ## Features
 ### 1. Database Overview
 - The database provides a comprehensive view of all available wheels.
